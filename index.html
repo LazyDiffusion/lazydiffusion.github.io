@@ -1,12 +1,305 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Lazy Diffusion Transformer for Interactive Image Editing">
+  <meta name="keywords" content="Transformers, Diffusion Models, Image Inpainting">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lazy Diffusion Transformer for Interactive Image Editing</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
 </head>
 <body>
 
-    test lazy
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Lazy Diffusion Transformer for Interactive Image Editing</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://yotamnitzan.github.io/">Yotam Nitzan</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=V8FwQGkAAAAJ&hl=en">Zongze Wu</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://richzhang.github.io/">Richard Zhang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://research.adobe.com/person/eli-shechtman/">Eli Shechtman</a><sup>1</sup>,
+            </span> <br>
+            <span class="author-block">
+              <a href="https://danielcohenor.com/">Daniel Cohen-Or</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://taesung.me/">Taesung Park</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://mgharbi.com/">Michaël Gharbi</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Adobe Research,</span>
+            <span class="author-block"><sup>2</sup>Tel-Aviv University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/teaser.png"
+                 class="teaser"
+                 alt="Teaser"/>
+      <h2 class="has-text-centered">
+        <span class="teaser"></span> Incremental image generation using LazyDiffusion. The model generates content 
+        according to a text prompt in an area specified by a mask. Each update generates only the masked pixels, with a runtime that depends
+        chiefly on the size of the mask, rather than that of the image.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+        <div class="teaser is-centered col-md-12">
+          <video id="teaser" autoplay controls muted loop playsinline>
+            <source src="./static/videos/lazy_diff_demo.mp4" type="video/mp4">
+          </video>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract. -->
+
+<section class="section">
+  <div class="container is-max-desktop">
+      <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce a novel diffusion transformer, LazyDiffusion, that generates partial image updates efficiently.
+            Our approach targets interactive image editing applications in which, starting from a blank canvas or an image, a user specifies a sequence of localized image modifications using
+            binary masks and text prompts. Our generator operates in two phases. First, a context encoder processes the current canvas and user mask to produce a compact global context
+            tailored to the region to generate. Second, conditioned on this context, a diffusion-based transformer decoder synthesizes the masked pixels in a “lazy” fashion, i.e., it only
+            generates the masked region. This contrasts with previous works that either regenerate the full canvas, wasting time and computation, or confine processing to a tight rectangular
+            crop around the mask, ignoring the global image context altogether. Our decoder’s runtime scales with the mask size, which is typically small, while our encoder introduces negligible overhead.
+            We demonstrate that our approach is competitive with state-of-the-art inpainting methods in terms of quality and fidelity while providing a 10× speedup for typical user interactions,
+            where the editing mask represents 10% of the image.
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+<!-- How does it work?. -->
+
+<section class="hero is-light is-small">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <br>
+        <br>  
+        <h2 class="title is-3">How does it work?</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            Our diffusion transformer decoder (bottom) reduces synthesis computation using two strategies. <br>
+            First, we compress the image context using a separate encoder (not shown) outside the diffusion loop.
+            Second, we only generate tokens corresponding to the masked region to generate. <br>
+            In contrast, typical diffusion transformers (top) maintain tokens for the entire image throughout the diffusion process,
+            to preserve global context. When performing inpainting, such model generates a full-size image,
+            most of which is discarded in order to in-fill the hole region only.
+            Existing convolutional diffusion models for inpainting suffer from the same drawbacks.
+          </p>
+        </div>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column has-text-centered">
+            <img src="./static/images/compare_to_full.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+          </div>
+
+          </div>
+      </div>
+    </div>
+      </div>
+      <br>
+</section>
+
+<!-- Runtime -->
+<section class="hero is-light is-small">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <br>
+        <br>  
+        <h2 class="title is-3">Runtime</h2>
+
+        <div class="content has-text-justified">
+          <p>
+          We compare LazyDiffusion to the two existing inpainting approaches -- regenerating a smaller crop or the entire image. All methods are using a PixArt-based architecture. 
+          LazyDiffusion is consistently faster than a regenerating the entire image, especially for small mask ratios typical to interactive edits, reaching a speedup of 10x.
+          Similarly, LazyDiffusion is faster than regenerating a crop when the mask is smaller than that.
+          For masks greater than that (dashed), regenerating the crop is technically faster but generates in low-resolution and naively upsamples to match the desired resolution, harming image quality.
+          </p>
+        </div>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column has-text-centered">
+            <img src="./static/images/runtime_v5.png" width="75%"/>
+          </div>
+
+          </div>
+      </div>
+    </div>
+      </div>
+      <br>
+</section>
+
+<!-- Results -->
+
+<section class="hero is-small">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <br>
+        <br>  
+        <h2 class="title is-3">Results</h2>
+
+        <!-- Progressive -->
+
+        <h3 class="title is-5">Progressive editing and generation</h3>
+        <div class="content has-text-justified">
+          <p>
+            Each panel illustrates a generative progression compared to the preceding state of the canvas to its left.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+            <img src="./static/images/gradual_edit_1.png" width="75%"/>
+            <img src="./static/images/gradual_edit_2.png" width="75%"/>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/gradual_gen_1.png" width="75%"/>
+          <img src="./static/images/gradual_gen_2.png" width="75%"/>
+      </div>
+
+      <br>
+      <br>
+
+      <h3 class="title is-5">Comparison</h3>
+      <p>
+        We compare LazyDiffusion with two models regenerating a 512x512 crop (Stable Diffusion 2 and a PixArt-inpainting model)
+        and two models regenerating the entire 1024x1024 image (Stable Diffusion XL and a second PixArt-inapinting model).
+        When inpainting objects that require relatively little semantic context, all methods produce reasonably good results <br>
+        <br>
+      </p>
+      <img src="./static/images/low_context.png"/>
     
+      <br>
+      <br>
+      <br>
+      <p>
+        When inpainting an object closely related to others, the inpainting model requires robust semantic understanding.
+        Methods processing only a crop produce objects that may seem reasonable in isolation, but do not fit well within the greater context of the image.
+        In contrast, LazyDiffusion leverages the compressed image context to generate high-fidelity results, comparable in quality to models regenerating the entire image and running up to ten times slower.
+      </p>
+      <br>
+      <br>
+      <img src="./static/images/high_context.png"/>
+    </div>
+      </div>
+      <br>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>
+      WIP TODO
+</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website source code based on the <a href="https://nerfies.github.io/">Nerfies</a> project page. If you want to reuse their <a href="https://github.com/nerfies/nerfies.github.io">source code</a>, please credit them appropriately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
